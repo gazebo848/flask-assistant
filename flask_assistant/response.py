@@ -338,15 +338,12 @@ class permission(_Response):
         update_intent {str} -- name of the intent that the user wants to get updates from
     """
 
-    def __init__(self, permissions, context=None, update_intent=None):
+    def __init__(self, permissions, context=None):
         super(permission, self).__init__(speech=None)
         self._messages[:] = []
 
         if isinstance(permissions, str):
             permissions = [permissions]
-
-        if "UPDATE" in permissions and update_intent is None:
-            raise ValueError("update_intent is required to ask for UPDATE permission")
 
         self._response["payload"]["google"]["systemIntent"] = {
             "intent": "actions.intent.PERMISSION",
@@ -354,7 +351,6 @@ class permission(_Response):
                 "@type": "type.googleapis.com/google.actions.v2.PermissionValueSpec",
                 "optContext": context,
                 "permissions": permissions,
-                "updatePermissionValueSpec": {"intent": update_intent},
             },
         }
 
